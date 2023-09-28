@@ -7,14 +7,28 @@ datasource db {
 }
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
-model Example {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model InstagramAccount {
+  id           Int    @id @default(autoincrement())
+  name         String
+  introduction String @db.VarChar(255)
+  Post         Post[]
 
-    @@index([name])
+  @@index([id])
+}
+
+model Post {
+  id           Int              @id @default(autoincrement())
+  lat          Decimal          @db.Decimal(10, 6)
+  long         Decimal          @db.Decimal(10, 6)
+  review       String           @db.VarChar(255)
+  stars        Int
+  contactInfo  String           @db.VarChar(10)
+  openingHours String // update this later on
+  instagramId  Int
+  instagrammer InstagramAccount @relation(fields: [instagramId], references: [id])
+
+  @@index([instagramId])
 }
