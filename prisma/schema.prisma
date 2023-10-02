@@ -22,13 +22,14 @@ model InstagramAccount {
 model Post {
   id           Int              @id @default(autoincrement())
   lat          Decimal          @db.Decimal(10, 6)
-  long         Decimal          @db.Decimal(10, 6)
+  lng          Decimal          @db.Decimal(10, 6)
   review       String           @db.VarChar(255)
   stars        Int
   contactInfo  String           @db.VarChar(10)
   openingHours String // update this later on
   instagramId  Int
   instagrammer InstagramAccount @relation(fields: [instagramId], references: [id])
+  locationName String           @db.VarChar(64)
 
   @@index([instagramId])
 }
