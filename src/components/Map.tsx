@@ -2,7 +2,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useLoadScript, GoogleMap, MarkerF } from "@react-google-maps/api";
 import MarkerCard from "./MarkerCard"; // Import the MarkerCard component
-import { RouterOutputs } from "~/utils/api";
+import type { RouterOutputs } from "~/utils/api";
 
 type posts = RouterOutputs["post"]["getAll"];
 type post = posts[number];
@@ -13,7 +13,6 @@ const DEFAULT_LOCATION = {
 };
 
 const Map = ({ posts }: { posts: posts }) => {
-  const libraries = useMemo(() => ["places"], []);
   const [currentLocation, setCurrentLocation] = useState(DEFAULT_LOCATION);
   const [selectedMarker, setSelectedMarker] = useState<post | null>(null); // Track selected marker
 
@@ -48,7 +47,7 @@ const Map = ({ posts }: { posts: posts }) => {
   if (!GOOGLE_MAPS_API_KEY) return <p>Maps service is currently invalid</p>;
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
-    libraries: libraries as any,
+    libraries: useMemo(() => ["places"], []),
   });
 
   if (!isLoaded) {

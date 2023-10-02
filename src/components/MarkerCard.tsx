@@ -1,5 +1,5 @@
 import React from "react";
-import { RouterOutputs } from "~/utils/api";
+import type { RouterOutputs } from "~/utils/api";
 
 type post = RouterOutputs["post"]["getAll"][number];
 
