@@ -15,7 +15,6 @@ const DEFAULT_LOCATION = {
 const Map = ({ posts }: { posts: posts }) => {
   const [currentLocation, setCurrentLocation] = useState(DEFAULT_LOCATION);
   const [selectedMarker, setSelectedMarker] = useState<post | null>(null); // Track selected marker
-
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -44,9 +43,8 @@ const Map = ({ posts }: { posts: posts }) => {
   };
 
   const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-  if (!GOOGLE_MAPS_API_KEY) return <p>Maps service is currently invalid</p>;
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY!,
     libraries: useMemo(() => ["places"], []),
   });
 
