@@ -16,4 +16,18 @@ export const postRouter = createTRPCRouter({
       orderBy: [{ createdAt: "desc" }],
     });
   }),
+  getByIgId: publicProcedure
+    .input(
+      z.object({
+        id: z.number(),
+      }),
+    )
+    .query(({ ctx, input }) => {
+      return ctx.db.post.findMany({
+        orderBy: [{ createdAt: "desc" }],
+        where: {
+          instagramId: input.id,
+        },
+      });
+    }),
 });
