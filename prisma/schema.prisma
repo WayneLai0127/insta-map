@@ -30,6 +30,7 @@ model Post {
   instagramId  Int
   instagrammer InstagramAccount @relation(fields: [instagramId], references: [id])
   locationName String           @db.VarChar(64)
+  createdAt    DateTime         @default(now())
 
   @@index([instagramId])
 }
