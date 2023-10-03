@@ -57,7 +57,7 @@ const Map = ({ posts }: { posts: posts }) => {
         options={mapOptions}
         zoom={10}
         mapTypeId={google.maps.MapTypeId.ROADMAP}
-        mapContainerStyle={{ width: "800px", height: "800px" }}
+        mapContainerStyle={{ width: "180vh", height: "100vh" }}
         onLoad={() => console.log("Map Component Loaded...")}
         onClick={() => setSelectedMarker(null)}
       >
