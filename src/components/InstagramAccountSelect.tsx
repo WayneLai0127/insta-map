@@ -6,7 +6,7 @@ import type { MultiValue } from "react-select";
 
 export type OptionType = {
   value: string;
-  label: string;
+  label: JSX.Element;
 };
 
 type SelectProps = {

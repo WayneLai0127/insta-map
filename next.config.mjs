@@ -4,6 +4,7 @@
  */
 await import("./src/env.mjs");
 
+// ! wildcards are available with 'remotePatterns' (see 'images' section for demo)
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
@@ -16,6 +17,14 @@ const config = {
   i18n: {
     locales: ["en"],
     defaultLocale: "en",
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "insta-map-bucket.*.amazonaws.com",
+      },
+    ],
   },
 };
 
