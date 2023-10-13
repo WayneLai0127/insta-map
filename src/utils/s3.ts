@@ -44,3 +44,34 @@ export const hasObject = async (objectKey: PathType): Promise<boolean> => {
     else throw error;
   }
 };
+
+export const listObjectsInFolder = async (
+  folderPath: string,
+  excludeFolders = true,
+  excludeCurrentFolder = true,
+): Promise<string[]> => {
+  const params: S3.ListObjectsV2Request = {
+    Bucket: process.env.AWS_S3_BUCKET_NAME!,
+    Prefix: folderPath,
+  };
+
+  const files: string[] = [];
+
+  try {
+    const data = await s3.listObjectsV2(params).promise();
+    if (data.Contents) {
+      for (const object of data.Contents) {
+        if (object.Key) {
+          // Extract the file name from the full object key
+          const fileName = object.Key.replace(`${folderPath}`, "");
+          if (excludeFolders && fileName.split("/").length > 2) continue;
+          if (excludeCurrentFolder && fileName === "/") continue;
+          files.push(fileName);
+        }
+      }
+    }
+    return files;
+  } catch (error) {
+    throw error;
+  }
+};
