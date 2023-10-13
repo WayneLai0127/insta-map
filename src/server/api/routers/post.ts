@@ -4,6 +4,27 @@ import { TRPCClientError } from "@trpc/client";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { generatePresignedURL, listObjectsInFolder } from "~/utils/s3";
+import type { ImageSize, PathType } from "~/utils/s3-types";
+
+async function addImageToPost(posts: Post[], imageSize: ImageSize = "lg") {
+  const updatedPosts = await Promise.all(
+    posts.map(async (post) => {
+      const path = `image/post/${post.id}/${imageSize}`;
+      const imageNames = await listObjectsInFolder(path);
+      const presignedImageUrls = await Promise.all(
+        imageNames.map((imageName) =>
+          generatePresignedURL((path + imageName) as PathType),
+        ),
+      );
+      return {
+        ...post,
+        imageUrls: presignedImageUrls,
+      };
+    }),
+  );
+  return updatedPosts;
+}
 
 async function addInstagramAccountInfoToPost(
   posts: Post[],
@@ -38,7 +59,7 @@ export const postRouter = createTRPCRouter({
       orderBy: [{ createdAt: "desc" }],
     });
 
-    return addInstagramAccountInfoToPost(posts, ctx);
+    return addInstagramAccountInfoToPost(await addImageToPost(posts), ctx);
   }),
   getByIgId: publicProcedure
     .input(
