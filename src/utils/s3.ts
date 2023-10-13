@@ -1,12 +1,5 @@
 import { S3 } from "aws-sdk";
-
-type Buckets = "post" | "instagram-user";
-type Id = number; // Assuming id is a string
-type ImageSizes = "sm" | "md" | "lg";
-type ImageTypes = ".png" | ".jpg" | ".jpeg";
-
-type ImagePathTypes = `image/${Buckets}/${ImageSizes}/${Id}${ImageTypes}`;
-type PathTypes = ImagePathTypes; // add more when more file buckets are needed
+import type { PathType } from "./s3-types";
 
 type S3Error = {
   code: string;
@@ -17,26 +10,26 @@ type S3Error = {
 };
 
 const s3 = new S3({
-  accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY,
+  accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
 });
 
 // Define functions for interacting with S3
 export const generatePresignedURL = (
-  objectKey: PathTypes,
+  objectKey: PathType,
   expiration = 300,
 ): string => {
   const params = {
-    Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME,
+    Bucket: process.env.AWS_S3_BUCKET_NAME,
     Key: objectKey,
     Expires: expiration,
   };
   return s3.getSignedUrl("getObject", params);
 };
 
-export const hasObject = async (objectKey: PathTypes): Promise<boolean> => {
+export const hasObject = async (objectKey: PathType): Promise<boolean> => {
   const params: S3.HeadObjectRequest = {
-    Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME!,
+    Bucket: process.env.AWS_S3_BUCKET_NAME!,
     Key: objectKey,
   };
 
