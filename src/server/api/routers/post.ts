@@ -10,7 +10,7 @@ import type { ImageSize, PathType } from "~/utils/s3-types";
 async function addImageToPost(posts: Post[], imageSize: ImageSize = "lg") {
   const updatedPosts = await Promise.all(
     posts.map(async (post) => {
-      const path = `image/post/${post.id}/${imageSize}`;
+      const path = `image/post/${imageSize}/${post.id}`;
       const imageNames = await listObjectsInFolder(path);
       const presignedImageUrls = await Promise.all(
         imageNames.map((imageName) =>
