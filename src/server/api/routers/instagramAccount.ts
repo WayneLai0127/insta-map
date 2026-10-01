@@ -11,7 +11,9 @@ const addAccountPhotoToInfo = async (accounts: InstagramAccount[]) => {
       profileImage: (await hasObject(
         `image/instagram-user/sm/${account.id}.png`,
       ))
-        ? generatePresignedURL(`image/instagram-user/sm/${account.id}.png`)
+        ? await generatePresignedURL(
+            `image/instagram-user/sm/${account.id}.png`,
+          )
         : "/favicon.ico",
     })),
   );
