@@ -36,7 +36,7 @@ const ImageWithSkeleton: React.FC<ImageWithSkeletonProps> = ({
         height={height}
         style={{ width: width, height: height }}
         className="rounded-full"
-        onLoadingComplete={handleImageLoad}
+        onLoad={handleImageLoad}
       />
     </div>
   );

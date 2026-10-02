@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useMemo, useState } from "react";
 import Map from "src/components/Map";
 import { api } from "~/utils/api";
 import InstagramAccountSelect from "src/components/InstagramAccountSelect";
@@ -11,28 +11,24 @@ import ImageWithSkeleton from "~/components/ImageWithSkeleton";
 type posts = RouterOutputs["post"]["getAll"];
 
 const Home = () => {
-  const { data: originalPostData, isLoading: postsLoading } =
+  const { data: originalPostData, isPending: postsLoading } =
     api.post.getAll.useQuery();
   const { data: instagramAccounts } = api.instagramAccount.getAll.useQuery();
   const [selectedIgAccount, setSelectedIgAccount] = useState<string[]>([]);
-  const [filteredPostData, setFilteredPostData] = useState<posts>([]);
 
   const handleIgAccountToggle = (newValue: MultiValue<OptionType>) => {
     setSelectedIgAccount(newValue.map((option) => option.value));
   };
 
-  useEffect(() => {
+  // Derive the filtered posts during render instead of syncing them into state
+  // from an effect (react-hooks/set-state-in-effect).
+  const filteredPostData = useMemo<posts>(() => {
     // Filter the original data based on selected Instagram accounts
     if (originalPostData && selectedIgAccount.length > 0) {
-      const filteredData = filterPostsByInstagramAccount(
-        originalPostData,
-        selectedIgAccount,
-      );
-      setFilteredPostData(filteredData);
-    } else {
-      // If no Instagram accounts selected, use the original data
-      setFilteredPostData(originalPostData ?? []);
+      return filterPostsByInstagramAccount(originalPostData, selectedIgAccount);
     }
+    // If no Instagram accounts selected, use the original data
+    return originalPostData ?? [];
   }, [originalPostData, selectedIgAccount]);
 
   if (postsLoading) return <div />;
